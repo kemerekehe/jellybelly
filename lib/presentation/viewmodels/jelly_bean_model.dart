@@ -6,16 +6,30 @@ class JellyBeanViewModel extends ChangeNotifier {
   final GetJellyBeans getJellyBeans;
   List<EntityJellyBean> _allJellyBeans = [];
   List<EntityJellyBean> _filteredJellyBeans = [];
+  bool _isFetching = false;
 
-  JellyBeanViewModel({required this.getJellyBeans});
+  JellyBeanViewModel({required this.getJellyBeans}) {
+    fetchJellyBeans(); // Panggil fetchJellyBeans saat view model dibuat
+  }
 
   List<EntityJellyBean> get jellyBeans => _filteredJellyBeans;
+  bool get isFetching => _isFetching;
 
   Future<void> fetchJellyBeans() async {
-    final jellyBeans = await getJellyBeans.call();
-    _allJellyBeans = jellyBeans;
-    _filteredJellyBeans = jellyBeans;
+    _isFetching = true;
     notifyListeners();
+
+    try {
+      final jellyBeans = await getJellyBeans.call();
+      _allJellyBeans = jellyBeans;
+      _filteredJellyBeans = jellyBeans;
+    } catch (e) {
+      // Handle error jika diperlukan
+      print('Error fetching jelly beans: $e');
+    } finally {
+      _isFetching = false;
+      notifyListeners();
+    }
   }
 
   void searchJellyBeans(String query) {

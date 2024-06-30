@@ -47,4 +47,8 @@ class UserRepositoryImpl implements UserRepository {
   bool isLoggedIn() {
     return sharedPreferences.getBool('isLoggedIn') ?? false;
   }
+
+  Future<void> logout() async {
+    await sharedPreferences.setBool('isLoggedIn', false);
+  }
 }

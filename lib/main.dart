@@ -1,4 +1,7 @@
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/material.dart';
+import 'package:jellybelly/domain/usecases/LogoutUser.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../domain/usecases/get_jelly_beans.dart';
@@ -29,10 +32,11 @@ class JellyBellyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
-        ChangeNotifierProvider(
-          create: (context) => AuthViewModel(
-            registerUser: locator<RegisterUser>(),
+        ChangeNotifierProvider.value(
+          value: AuthViewModel(
             loginUser: locator<LoginUser>(),
+            logoutUser: locator<LogoutUser>(),
+            isLoggedIn: isLoggedIn, registerUser: locator<RegisterUser>(), // Berikan nilai isLoggedIn
           ),
         ),
         ChangeNotifierProvider(
@@ -49,6 +53,7 @@ class JellyBellyApp extends StatelessWidget {
           '/register': (context) => const RegisterScreen(),
           '/login': (context) => const LoginScreen(),
           '/home': (context) => const JellyBeanListPage(),
+          '/dashboard': (context) => const HomePage(),
         },
       ),
     );

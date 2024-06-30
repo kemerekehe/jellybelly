@@ -1,16 +1,17 @@
 import 'package:get_it/get_it.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import '../domain/repositories/local_data_source.dart';
+import '../domain/usecases/LogoutUser.dart';
+import '../domain/usecases/login_user.dart';
+import '../domain/usecases/register_user.dart';
+import '../domain/usecases/get_jelly_beans.dart';
+import '../domain/repositories/user_repository.dart';
+import '../domain/repositories/jelly_bean_repository.dart';
 import '../data/repositories/user_repository_impl.dart';
 import '../data/repositories/jelly_bean_repository_impl.dart';
 import '../data/resources/local_data_source_impl.dart';
 import '../data/resources/database_helper.dart';
 import '../data/resources/api_service.dart';
-import '../domain/repositories/local_data_source.dart';
-import '../domain/repositories/user_repository.dart';
-import '../domain/repositories/jelly_bean_repository.dart';
-import '../domain/usecases/get_jelly_beans.dart';
-import '../domain/usecases/login_user.dart';
-import '../domain/usecases/register_user.dart';
 
 final GetIt locator = GetIt.instance;
 
@@ -40,5 +41,6 @@ Future<void> setupLocator() async {
   // Register use cases
   locator.registerLazySingleton(() => RegisterUser(locator<UserRepository>()));
   locator.registerLazySingleton(() => LoginUser(locator<UserRepository>()));
+  locator.registerLazySingleton(() => LogoutUser(locator<UserRepository>()));
   locator.registerLazySingleton(() => GetJellyBeans(locator<JellyBeanRepository>()));
 }

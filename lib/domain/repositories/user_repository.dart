@@ -6,4 +6,5 @@ abstract class UserRepository {
   Future<User?> getUser(String username, String password);
   Future<void> registerUser(User user);
   Future<bool> isEmailRegistered(String email);
+  Future<void> logout(); // Menambahkan fungsi logout sebagai async
 }
