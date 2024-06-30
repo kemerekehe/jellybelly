@@ -1,10 +1,6 @@
-import 'package:firebase_core/firebase_core.dart';
-import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/material.dart';
-import 'package:jellybelly/domain/usecases/LogoutUser.dart';
-import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import '../domain/usecases/get_jelly_beans.dart';
+import 'package:provider/provider.dart';
 import '../presentation/screens/home_screen.dart';
 import '../presentation/screens/jelly_bean_list.dart';
 import '../presentation/screens/login_screen.dart';
@@ -14,12 +10,14 @@ import '../presentation/viewmodels/jelly_bean_model.dart';
 import '../domain/usecases/login_user.dart';
 import '../domain/usecases/register_user.dart';
 import '../services/locator.dart';
+import 'domain/usecases/LogoutUser.dart';
+import 'domain/usecases/get_jelly_beans.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  SharedPreferences prefs = await SharedPreferences.getInstance();
-  bool isLoggedIn = prefs.getBool('isLoggedIn') ?? false;
   await setupLocator();
+  SharedPreferences prefs = locator<SharedPreferences>();
+  bool isLoggedIn = prefs.getBool('isLoggedIn') ?? false;
   runApp(JellyBellyApp(isLoggedIn: isLoggedIn));
 }
 
@@ -36,7 +34,8 @@ class JellyBellyApp extends StatelessWidget {
           value: AuthViewModel(
             loginUser: locator<LoginUser>(),
             logoutUser: locator<LogoutUser>(),
-            isLoggedIn: isLoggedIn, registerUser: locator<RegisterUser>(), // Berikan nilai isLoggedIn
+            isLoggedIn: isLoggedIn,
+            registerUser: locator<RegisterUser>(),
           ),
         ),
         ChangeNotifierProvider(
@@ -48,7 +47,7 @@ class JellyBellyApp extends StatelessWidget {
         theme: ThemeData(
           primarySwatch: Colors.blue,
         ),
-        home: isLoggedIn ? const JellyBeanListPage() : const HomePage(), // Tampilkan LoginScreen jika belum login
+        home: isLoggedIn ? const JellyBeanListPage() : const HomePage(),
         routes: {
           '/register': (context) => const RegisterScreen(),
           '/login': (context) => const LoginScreen(),
